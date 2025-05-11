@@ -72,6 +72,15 @@ This repository contains scripts to streamline migrating your largest files from
    - Applies `creation_time` and `location` tags to each video via `ffmpeg`.
    - Moves tagged files into `ready_for_upload/` for side-loading onto your Pixel 1.
 
+3. **Pixel 1 setup**
+   - Create a new folder, e.g. "Big Files" on Pixel 1
+   - Go to **Collections → On this device → Big Files**.
+   - Turn on **Backup** to send everything to Google Photos.
+   - For file removal from Google Photos, use its filename in the Google Photos search. That way you'll have only a single result, which you can put into Trash:
+  `https://photos.google.com/search/{filename}`
+   - Once in Trash, upload it via your Pixel 1, and when everything is confirmed working, you can permanently delete the item from Trash to reclaim space.
+   - Move large files from PC to `Big Files` on your Pixel 1
+   - Once it is uploaded, use Google Photos → “Free up space on this device” to remove local copies of already backed-up files. As Pixel 1 has limited storage available, it is good to remove it asap. 
 ---
 
 ## ⚠️ Drawbacks & Future Improvements
@@ -121,6 +130,7 @@ To automatically back up new photos and videos from your main phone to Google Ph
    ```
 
    This prevents syncing of temporary or trashed files, so only real photos and videos are synchronized.
+7. You can go to [https://photos.google.com/search/_tra_](https://photos.google.com/search/_tra_) to check newly added Photos/Videos and observe if everything works
 
 ---
 
