@@ -139,3 +139,4 @@ To automatically back up new photos and videos from your main phone to Google Ph
 Feel free to create enhancements, particularly:
 - Automating album re-linking
 - Safe deletion of Google Photos items post-verification
+- Automatically move files from PC to Pixel 1 -> check periodically if files were uploaded -> remove them from Pixel 1 to make space -> repeat
