@@ -139,11 +139,3 @@ To automatically back up new photos and videos from your main phone to Google Ph
 Feel free to create enhancements, particularly:
 - Automating album re-linking
 - Safe deletion of Google Photos items post-verification
-- Face-detection compatibility
-- Geocoding integration
-
----
-
-## 📄 License
-
-MIT © Your Name
