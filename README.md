@@ -130,7 +130,7 @@ To automatically back up new photos and videos from your main phone to Google Ph
    ```
 
    This prevents syncing of temporary or trashed files, so only real photos and videos are synchronized.
-7. You can go to [https://photos.google.com/search/_tra_](https://photos.google.com/search/_tra_) to check newly added Photos/Videos and observe if everything works
+7. You can go to [https://photos.google.com/search/\_tra\_](https://photos.google.com/search/_tra_) to check newly added Photos/Videos and observe if everything works
 8. You can leave your Pixel 1 in charger constantly, so that the Sync happens all the time without any interaction.
 ---
 
