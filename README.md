@@ -30,7 +30,7 @@ This repository contains scripts to streamline migrating your largest files from
 - **Python 3.x** with `selenium` installed:  `pip install selenium`
 - **Chrome** and corresponding **ChromeDriver** binaries (must match version). Download both from:
 
-  https://googlechromelabs.github.io/chrome-for-testing/
+  [https://googlechromelabs.github.io/chrome-for-testing/](https://googlechromelabs.github.io/chrome-for-testing/)
 
 - **ffmpeg** installed and available on your `PATH` for metadata operations.
 - A logged-in Google account in your main Chrome instance (so Selenium can reuse your session).
@@ -40,7 +40,7 @@ This repository contains scripts to streamline migrating your largest files from
 ## 🛠️ Setup & Configuration
 
 1. **Copy a large-item link:**
-   - Visit https://photos.google.com/quotamanagement/large and copy the URL of the first item - e.g., `https://photos.google.com/quotamanagement/large/photo/{uniqueID}`.
+   - Visit [https://photos.google.com/quotamanagement/large](https://photos.google.com/quotamanagement/large) and copy the URL of the first item - e.g., `https://photos.google.com/quotamanagement/large/photo/{uniqueID}`.
    - Paste it into the `START_URL` constant in `SeleniumScraper.py`.
 
 2. **Configure Chrome & Profile Paths:**
@@ -81,6 +81,46 @@ This repository contains scripts to streamline migrating your largest files from
 - **Face-Detection Uploads Fail:**  Pixel’s face-based auto-upload won’t trigger on files side-loaded from Pixel 1; manual sorting or future scripts required.
 - **Geocoding Placeholder:**  If GPS data is missing, a `geocode_location()` stub exists but needs real implementation or integration with a geocoding API.
 - **Visibility of Processed Items:** Once the biggest videos are moved to Pixel 1, they no longer appear in Google Photos’ “Large photos & videos” section. Therefore, each run starts from the first link in that section (rather than resuming from the last processed one) to ensure newly large files are captured.
+
+---
+
+## 💡 Recommendations
+
+- When you want to remove a file, use its filename in the Google Photos search. That way you'll have only a single result, which you can put into Trash:
+  `https://photos.google.com/search/{filename}`
+  Once in Trash, upload it via your Pixel 1, and when everything is confirmed working, you can permanently delete the item from Trash to reclaim space.
+
+## 📱 Continuous Phone Backup via Pixel 1
+
+To automatically back up new photos and videos from your main phone to Google Photos via Pixel 1:
+
+1. Turn off automatic backup on your current phone.
+2. Install [Resilio Sync](https://play.google.com/store/apps/details?id=com.resilio.sync) on both devices.
+3. On your main phone:
+
+   * Use Google Photos → “Free up space on this device” to remove local copies of already backed-up files.
+   * In the Sync app, tap **Add → Add backup → Custom → DCIM/Camera**.
+   * Tap **Info** and display the **QR code**.
+   * In the Resilio Sync app, go to **Settings → General** and turn off **Auto Sleep**.
+   * Disable battery optimization for Resilio Sync in Android App settings so synchronization runs continuously.
+4. On your Pixel 1:
+
+   * Scan the QR code.
+   * Disable “Selective sync” so that all files synchronize.
+   * In the Resilio Sync app, go to **Settings → General** and turn off **Auto Sleep**.
+   * Disable battery optimization for Resilio Sync in Android App settings so synchronization runs continuously.
+5. On Pixel 1, open Google Photos:
+
+   * Go to **Collections → On this device → Camera**.
+   * Turn on **Backup** to send everything to Google Photos.
+6. On your PC, connect your main phone and open the `\DCIM\Camera\.sync\IgnoreList` (a pre-defined existing file after you set up Resilio Sync folder) and add:
+
+   ```
+   .trashed*
+   .pending*
+   ```
+
+   This prevents syncing of temporary or trashed files, so only real photos and videos are synchronized.
 
 ---
 

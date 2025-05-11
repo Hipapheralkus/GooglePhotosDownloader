@@ -41,7 +41,7 @@ def process_video(path, lat, lon, dt_iso, ready_dir):
     cmd = [
         'ffmpeg', '-y', '-i', path,
         '-metadata', f'creation_time={dt_iso}',
-        '-metadata', f'location={lat},{lon}',
+        '-metadata', f'location=+{lat}+{lon}/',
         '-codec', 'copy', tmp
     ]
     try:
