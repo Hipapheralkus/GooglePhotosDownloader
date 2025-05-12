@@ -41,7 +41,9 @@ def process_video(path, lat, lon, dt_iso, ready_dir):
     cmd = [
         'ffmpeg', '-y', '-i', path,
         '-metadata', f'creation_time={dt_iso}',
-        '-metadata', f'location=+{lat}+{lon}/',
+        '-metadata', f'com.apple.quicktime.location.ISO6709=+{lat}+{lon}/',
+        '-movflags', 'use_metadata_tags',
+        '-map_metadata', '0',
         '-codec', 'copy', tmp
     ]
     try:
