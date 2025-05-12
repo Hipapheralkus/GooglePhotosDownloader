@@ -27,6 +27,7 @@ CHROMEDRIVER_EXEC = r"C:\Users\{user}\Desktop\chromedriver-win64\chromedriver.ex
 START_URL         = "https://photos.google.com/quotamanagement/large/photo/{ID}}"
 CSV_PATH          = "google_photos_videos.csv"
 DOWNLOAD_DIR      = os.path.join(os.getcwd(), "gp_downloads")
+READY_DIR         = os.path.join(os.path.dirname(DOWNLOAD_DIR), "ready_for_upload")
 WAIT_TIMEOUT      = 10     # explicit Selenium waits (seconds)
 DOWNLOAD_ENABLED  = True   # if False, skip download entirely
 DOWNLOAD_TIMEOUT  = None   # None = wait indefinitely
@@ -34,6 +35,7 @@ DOWNLOAD_STABLE_SEC = 30   # seconds of unchanged size to deem download finished
 
 # Ensure download directory exists
 Path(DOWNLOAD_DIR).mkdir(exist_ok=True)
+Path(READY_DIR).mkdir(exist_ok=True)
 
 # ─── VERSION HELPERS ───────────────────────────────────────────────────
 
@@ -156,19 +158,28 @@ def process_link(url: str) -> str | None:
         filename = driver.find_element(By.CSS_SELECTOR, "[aria-label^='Filename:' ]").get_attribute('aria-label').split(': ',1)[1]
     except Exception:
         filename = ''
-    file_path = DOWNLOAD_DIR and Path(DOWNLOAD_DIR)/filename
+    file_path_download = None
+    file_path_ready = None
+    if filename:
+        file_path_download = Path(DOWNLOAD_DIR) / filename
+        file_path_ready = Path(READY_DIR) / filename
 
     # download logic
     downloaded = False
+    skip_download = False # Flag to indicate if download should be skipped
     if DOWNLOAD_ENABLED and filename:
-        if file_path.exists() and not file_path.with_suffix(file_path.suffix + '.crdownload').exists():
-            downloaded = True
-            print('File exists — skipping download.', flush=True)
+        file_exists_download = file_path_download.exists() and not file_path_download.with_suffix(file_path_download.suffix + '.crdownload').exists()
+        file_exists_ready = file_path_ready.exists()
+        if file_exists_download or file_exists_ready:
+            downloaded = True # Treat existing file as 'downloaded' for metadata purposes
+            skip_download = True # Explicitly skip the download step
+            location = "gp_downloads" if file_exists_download else "ready_for_upload"
+            print(f'File exists in {location} — skipping download.', flush=True)
         else:
             try:
                 driver.find_element(By.XPATH, "//button[contains(@aria-label,'Download')]").click()
                 print('Download started…', flush=True)
-                downloaded = wait_for_file_download(file_path)
+                downloaded = wait_for_file_download(file_path_download)
                 if downloaded:
                     print('Download finished.', flush=True)
                 else:
@@ -176,7 +187,7 @@ def process_link(url: str) -> str | None:
             except Exception as e:
                 print('⚠️  Download error:', e, flush=True)
 
-    # write metadata only if downloaded (or download disabled)
+    # write metadata only if downloaded (or download disabled or file already existed)
     if downloaded or not DOWNLOAD_ENABLED:
         if url not in processed_links:
             def field(css, conv=lambda x: x):
@@ -209,7 +220,7 @@ def process_link(url: str) -> str | None:
             csv_file.flush()
             processed_links.add(url)
             print('Metadata saved.', flush=True)
-    else:
+    elif not skip_download: # Only print this if download was attempted and failed
         print('Skipping metadata because download failed.', flush=True)
 
     # navigate to next
