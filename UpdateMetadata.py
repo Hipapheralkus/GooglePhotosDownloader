@@ -39,12 +39,10 @@ def process_video(path, lat, lon, dt_iso, ready_dir):
     """
     tmp = path + '.tmp.mp4'
     cmd = [
-        'ffmpeg', '-y', '-i', path,
-        '-metadata', f'creation_time={dt_iso}',
-        '-metadata', f'com.apple.quicktime.location.ISO6709=+{lat}+{lon}/',
-        '-movflags', 'use_metadata_tags',
-        '-map_metadata', '0',
-        '-codec', 'copy', tmp
+        'ffmpeg',
+        '-i', path,
+        '-metadata', f'location=+{lat}+{lon}/',
+        '-c', 'copy', tmp
     ]
     try:
         subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
